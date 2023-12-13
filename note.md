@@ -24,9 +24,6 @@ chatbot
 
 
 
-뭘 만들지..?
-
-
 아재개그 테스트 챗봇
 
 
@@ -40,3 +37,6 @@ https://codepen.io/viktorstrate/pen/yoBRLy
 
 3. 카드 정렬
 https://seoyun-is-connecting-the-dots.tistory.com/294
+
+4. js에서 db 연결(?)
+https://cocoon1787.tistory.com/836
