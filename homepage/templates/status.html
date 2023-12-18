@@ -9,31 +9,34 @@
         <div class="col-7 quiz_wrap">
             <div class="d-flex flex-wrap justify-content-center align-items-start m-3 p-3">
                 {% for quiz in quizs %}
-                    <div class="my-2">
-                        <div class="col-10 card m-3" style="width: 14rem; height: 11rem; border-radius: 0.6rem" id="quizbox{{ quiz.id }}">
-                                <div class="card-body text-quiz">
-                                    <h5 class="card-title fs-5 text fw-bold lh-base" style="word-break: keep-all" id="quiz{{ quiz.id }}">{{ quiz.quiz }}</h5>
-                                    <p class="card-text"></p>
-                                </div>
-                                {% if solved.user_id == g.user.id and solved.quiz_id == quiz.id %}
-                                    <div class="container card-footer quizsuccess">
-                                        <div class="row">
-                                            <span class="col-5 p-2 fw-bold text-white-50 fs-6">No. {{ quiz.id }}</span>
-                                            <span class="col-7 fw-bold text-light text-end p-2">
-                                                {{ quiz.answer }}
-                                {% else %}
-                                    <div class="container card-footer">
-                                        <div class="row">
-                                            <span class="col-5 p-2 fs-6">No. {{ quiz.id }}</span>        
-                                            <span class="col-7 text-black-50 text-end p-2">
-                                                도전 가능                                            
-                                {% endif %}
-                                            </span>
-                                        </div>
-                                </div>
+                <div class="my-2">
+                    <div class="col-10 card m-3" style="width: 14rem; height: 11rem; border-radius: 0.6rem" id="quizbox{{ quiz.id }}">
+                        <div class="card-body text-quiz">
+                            <h5 class="card-title fs-5 text fw-bold lh-base" style="word-break: keep-all" id="quiz{{ quiz.id }}">{{ quiz.quiz }}</h5>
+                            <p class="card-text"></p>
                         </div>
+                        {% if quiz.id in solved_quiz_ids %}
+                        <div class="container card-footer quizsuccess">
+                                <div class="row">
+                                    <span class="col-5 p-2 fw-bold text-white-50 fs-6">No. {{ quiz.id }}</span>
+                                    <span class="col-7 fw-bold text-light text-end p-2">
+                                        {{ quiz.answer }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="container card-footer">
+                                <div class="row">
+                                    <span class="col-5 p-2 fs-6">No. {{ quiz.id }}</span>        
+                                    <span class="col-7 text-black-50 text-end p-2">
+                                        도전 가능
+                                    </span>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
-                {% endfor %}
+                </div>
+            {% endfor %}
               </div>
         </div>
         

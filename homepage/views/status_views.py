@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, url_for, g, flash
 from werkzeug.utils import redirect
 
-# from homepage import db
+from homepage import db
 from homepage.forms import ChatForm
 from homepage.models import Users, azquiz, Solved
 from homepage.views.auth_views import login_required
@@ -11,12 +11,20 @@ import re
 
 bp = Blueprint('status', __name__, url_prefix='/status')
 
+def insertAnswerCheck (quiznumber):
+    sql = f"insert into solved (user_id, quiz_id) values ({g.user.id}, {quiznumber})"
+    db.session.commit(sql)
+    return
+
 @bp.route('/show/', methods=('GET', 'POST'))
 @login_required
 def show():
+    solved = Solved.query.filter_by(user_id=g.user.id).all()
     quizs = azquiz.query
-    solved = Solved.query.filter_by(user_id=g.user.id).first()
-    return render_template('status.html', quizs=quizs, solved=solved)
+    solved_quiz_ids = []
+    for solve in solved:
+        solved_quiz_ids.append(solve.quiz_id)
+    return render_template('status.html', quizs=quizs, solved_quiz_ids=solved_quiz_ids)
 
 @bp.route('/show/api/endpoint', methods=['POST'])
 def api_endpoint():
@@ -49,6 +57,7 @@ def api_endpoint():
             if requestkey == target_quiz.answer:
                 result = '<b class="fw-bold">정답</b>입니다🥳'
                 resulttype = "answer"
+                insertAnswerCheck (quiznumber)
             else :
                 result = "다시 한 번 고민해보세요!"
                 resulttype = "order"
