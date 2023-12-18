@@ -13,13 +13,13 @@ sys.path.append(path.dirname( path.dirname( path.abspath( path.dirname( path.abs
 cwd = os.getcwd()
 
 # 데이터 읽어오기
-train_file = os.path.join(cwd, 'models', 'intent', 'total_train_data_2.csv')
+train_file = os.path.join(cwd, 'models', 'intent', 'total_train_data.csv')
 data = pd.read_csv(train_file, delimiter=',')
 queries = data['query'].tolist()
 intents = data['intent'].tolist()
 
 from utils.Preprocess import Preprocess
-word2index_dic = os.path.join(cwd, 'train_tools', 'dict', 'chatbot_dict_2.bin')
+word2index_dic = os.path.join(cwd, 'train_tools', 'dict', 'chatbot_dict.bin')
 userdic = os.path.join(cwd, 'utils', 'user_dic.tsv')
 p = Preprocess(word2index_dic=word2index_dic, userdic=userdic)
 
@@ -102,4 +102,4 @@ print('Accuracy: %f' % (accuracy * 100))
 print('loss: %f' % (loss))
 
 # 모델 저장 
-model.save('intent_model_2.h5')
+model.save('intent_model.h5')

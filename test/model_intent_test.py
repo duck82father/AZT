@@ -10,7 +10,7 @@ from models.intent.IntentModel import IntentModel
 
 word2index_dic = os.path.join(cwd, 'train_tools', 'dict', 'chatbot_dict.bin')
 userdic = os.path.join(cwd, 'utils', 'user_dic.tsv')
-model = os.path.join(cwd, 'models', 'intent', 'intent_model_2.h5')
+model = os.path.join(cwd, 'models', 'intent', 'intent_model.h5')
 
 p = Preprocess(word2index_dic=word2index_dic, userdic=userdic)
 

@@ -23,7 +23,7 @@ query = "오전에 탕수육 10개 주문합니다."
 
 # 의도 파악
 from models.intent.IntentModel import IntentModel
-intentmodel = os.path.join(cwd, 'models', 'intent', 'intent_model_2.h5')
+intentmodel = os.path.join(cwd, 'models', 'intent', 'intent_model.h5')
 intent = IntentModel(model_name=intentmodel, preprocess=p)
 predict = intent.predict_class(query)
 intent_name = intent.labels[predict]

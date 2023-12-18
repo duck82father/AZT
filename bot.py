@@ -17,12 +17,12 @@ from models.ner.NerModel import NerModel
 from utils.FindAnswer import FindAnswer
 
 # 전처리 객체 생성
-word2index_dic = os.path.join(cwd, 'train_tools', 'dict', 'chatbot_dict_2.bin')
+word2index_dic = os.path.join(cwd, 'train_tools', 'dict', 'chatbot_dict.bin')
 userdic = os.path.join(cwd, 'utils', 'user_dic.tsv')
 p = Preprocess(word2index_dic=word2index_dic, userdic=userdic)
 
 # 의도 파악 모델
-intentmodel = os.path.join(cwd, 'models', 'intent', 'intent_model_2.h5')
+intentmodel = os.path.join(cwd, 'models', 'intent', 'intent_model.h5')
 intent = IntentModel(model_name=intentmodel, preprocess=p)
 
 # 개체명 인식 모델
@@ -52,7 +52,7 @@ def to_client(conn, addr, prams):
         # 의도 파악
         intent_predict = intent.predict_class(query)
         intent_name = intent.labels[intent_predict]
-        
+
         print(intent_predict, intent_name)
 
         # 개체명 파악
@@ -62,13 +62,17 @@ def to_client(conn, addr, prams):
         print(ner_predicts, ner_tags)
 
         # 답변 검색
-        try:
-            f = FindAnswer(db)
-            answer_text, answer_image = f.search(intent_name, ner_tags)
-            answer = f.tag_to_word(ner_predicts, answer_text)
-        except:
+        if intent_predict != 0 and ner_tags == None:
             answer = "죄송해요 무슨 말인지 모르겠어요. 조금 더 공부할게요"
             answer_image = None
+        else: 
+            try:
+                f = FindAnswer(db)
+                answer_text, answer_image = f.search(intent_name, ner_tags)
+                answer = f.tag_to_word(ner_predicts, answer_text)
+            except:
+                answer = "죄송해요 무슨 말인지 모르겠어요. 조금 더 공부할게요"
+                answer_image = None
 
         send_json_data_str = {
             "Query" : query,

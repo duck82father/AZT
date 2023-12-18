@@ -7,7 +7,7 @@ port = 5050
 
 # 클라이언트 프로그램 시작
 def chatbot_client(query):
-    if (quit == "exti"):
+    if (quit == "exit"):
         exit(0)
     print("-"*40)
 

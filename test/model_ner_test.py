@@ -14,7 +14,7 @@ nermodel = os.path.join(cwd, 'models', 'ner', 'ner_model.h5')
 
 p = Preprocess(word2index_dic=word2index_dic, userdic=userdic)
 ner = NerModel(model_name=nermodel, preprocess=p)
-query = '23시 59분 김 몇 시 부터 가능 하 ㄴ 가요'
+query = '짬뽕 1그릇 주문이요'
 predicts = ner.predict(query)
 tags = ner.predict_tags(query)
 print(predicts)

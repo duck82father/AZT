@@ -24,14 +24,21 @@ def api_endpoint():
 
     requestkey, quiznumber = data['key'], data['quiznumber']    
     result = re.findall(r'\d+', requestkey)
-    
-    if (result != [] and requestkey[-1:] == "번") or (result != [] and requestkey[-2:] == "문제"):
-                result = int(result[0])
-                if result > 120:
-                    result = "문제가 없습니다. [ 범위 1 ~ 120번 ]"
-                    resulttype = "order" 
-                else: 
-                    resulttype = "quiz"
+    order_result = re.findall(r'주문', requestkey)
+
+    if order_result == ['주문']:
+        if order_result[0] == '주문':
+            print(requestkey)
+            result = chatbot_client(requestkey)
+            resulttype = "order"
+
+    elif (result != [] and requestkey[-1:] == "번") or (result != [] and requestkey[-2:] == "문제"):
+        result = int(result[0])
+        if result > 120:
+            result = "문제가 없습니다. [ 범위 1 ~ 120번 ]"
+            resulttype = "order" 
+        else: 
+            resulttype = "quiz"
 
     elif int(quiznumber) > 0 :
         target_quiz = azquiz.query.get(quiznumber)

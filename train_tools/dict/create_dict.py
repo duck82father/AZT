@@ -36,7 +36,7 @@ tokenizer.fit_on_texts(dict)
 word_index = tokenizer.word_index
 
 # 사전 파일 생성
-bin_file = os.path.join(cwd, 'train_tools', 'dict', 'chatbot_dict_2.bin')
+bin_file = os.path.join(cwd, 'train_tools', 'dict', 'chatbot_dict.bin')
 f = open(bin_file, "wb")
 try :
     pickle.dump(word_index, f)

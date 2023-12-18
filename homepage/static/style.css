@@ -10,6 +10,22 @@ body {
     color:#131dac;
 }
 
+.jumbotron {
+    background: linear-gradient(-30deg, #2465c0, #1f83da, #2752dd, #1289cf);
+    background-size: 400% 400%;
+    animation: gradient 9s ease infinite;
+}
+@keyframes gradient {
+    0% {
+     background-position: 0% 50%;
+    }
+    50% {
+     background-position: 100% 50%;
+    }
+    100% {
+     background-position: 0% 50%;
+    }
+}
 
 .nav-background-behind {
     position:absolute;
@@ -18,9 +34,9 @@ body {
 }
 
 .selected_quiz {
-    color:#b18b19;
-    background-color:#fffbeb;
-    outline:solid 6px rgb(250, 241, 118, 0.5);
+    color:#916e07;
+    background-color:#faf4dc;
+    outline:solid 6px rgb(255,239,97, 0.75);
 }
 
 .whole_wrap {
@@ -30,10 +46,10 @@ body {
 }
 
 .quiz_wrap {
-    height: 95vh; /* 화면 높이로 설정 */
+    height: 93vh; /* 화면 높이로 설정 */
     overflow-y: auto; /* 세로 스크롤 유지 */
     -ms-overflow-style: none;
-    background-color: #d9eefc;
+    background-color: #d2ecfd;
 }
 
 .quiz_wrap::-webkit-scrollbar{
@@ -65,7 +81,8 @@ body {
 }
 
 .chat_wrap .inner {
-    background-color: #c7eee7;
+    background-color: #a5d7ff;
+    border: #8eceff 2px solid;
     border-radius: 0.6rem;
     padding: 36px;
     overflow-y: scroll;
@@ -74,7 +91,8 @@ body {
 }
 
 .chat_wrap .inner::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
+    height: 5px;
 }
 
 .chat_wrap .inner::-webkit-scrollbar-track {
@@ -83,7 +101,7 @@ body {
 
 .chat_wrap .inner::-webkit-scrollbar-thumb {
     border-radius: 3px;
-    background-color: rgb(184, 184, 184);
+    background-color: #6ab6f0;
 }
 
 .chat_wrap .inner::-webkit-scrollbar-button {
@@ -140,12 +158,12 @@ body {
 .chat_wrap .item.mymsg .box::before {
     left: auto;
     right: -8px;
-    border-left: 8px solid #fee600;
+    border-left: 8px solid #ffef61;
     border-right: 0;
 }
 
 .chat_wrap .item.mymsg .box .msg {
-    background: #fee600;
+    background: #ffef61;
 }
 
 .chat_wrap .item.mymsg .box .time {

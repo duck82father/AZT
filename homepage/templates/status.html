@@ -180,7 +180,7 @@
                             if (elementBox) {
                                 elementBox.scrollIntoView({ behavior: 'smooth', block: "center", inline: "center" });
                                 elementBox.setAttribute('class', 'col-10 card m-3 selected_quiz')
-                                elementText.setAttribute('style', 'word-break:keep-all; color:#b18b19;')
+                                elementText.setAttribute('style', 'word-break:keep-all; color:#916e07;')
                             }
                             elementBoxGlobal = elementBox
                             elementTextGlobal = elementText
@@ -190,7 +190,7 @@
 
                         function information(){
                             sendMessage('<b class="fw-bold">아재퀴즈 문제</b>를 선택하세요<br>[ 입력 : 1 ~ 120번 ]','yourmsg')
-                            sendMessage('<b class="fw-bold">Tip</b> : 배고플땐 음식을 주문해보세요🍜','yourmsg')
+                            sendMessage('<b class="fw-bold">Tip</b> : 배고플땐 음식을 <b class="fw-bold text-danger">"주문"</b>해보세요🍜','yourmsg')
                         }
                         information()
                     });
