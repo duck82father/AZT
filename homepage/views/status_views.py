@@ -22,10 +22,10 @@ def show():
 def api_endpoint():
     data = request.json  # JSON 형식의 데이터를 받기 위해 request.json 사용
 
-    requestkey, quiznumber = data['key'], data['quiznumber']
-
-    if requestkey[-1:] == "번" or requestkey[-2:] == "문제":
-                result = re.findall(r'\d+', requestkey)
+    requestkey, quiznumber = data['key'], data['quiznumber']    
+    result = re.findall(r'\d+', requestkey)
+    
+    if (result != [] and requestkey[-1:] == "번") or (result != [] and requestkey[-2:] == "문제"):
                 result = int(result[0])
                 if result > 120:
                     result = "문제가 없습니다. [ 범위 1 ~ 120번 ]"
