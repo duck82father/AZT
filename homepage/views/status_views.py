@@ -12,9 +12,11 @@ import re
 bp = Blueprint('status', __name__, url_prefix='/status')
 
 def insertAnswerCheck (quiznumber):
-    sql = f"insert into solved (user_id, quiz_id) values ({g.user.id}, {quiznumber})"
-    db.session.commit(sql)
-    return
+    solved_record = Solved(user_id=g.user.id, quiz_id=quiznumber)
+    db.session.add(solved_record)
+    db.session.commit()
+    answer = azquiz.query.get(quiznumber).answer
+    return answer
 
 @bp.route('/show/', methods=('GET', 'POST'))
 @login_required
@@ -33,10 +35,10 @@ def api_endpoint():
     requestkey, quiznumber = data['key'], data['quiznumber']    
     result = re.findall(r'\d+', requestkey)
     order_result = re.findall(r'주문', requestkey)
+    answer = None
 
     if order_result == ['주문']:
         if order_result[0] == '주문':
-            print(requestkey)
             result = chatbot_client(requestkey)
             resulttype = "order"
 
@@ -57,7 +59,7 @@ def api_endpoint():
             if requestkey == target_quiz.answer:
                 result = '<b class="fw-bold">정답</b>입니다🥳'
                 resulttype = "answer"
-                insertAnswerCheck (quiznumber)
+                answer = insertAnswerCheck (quiznumber)
             else :
                 result = "다시 한 번 고민해보세요!"
                 resulttype = "order"
@@ -66,4 +68,4 @@ def api_endpoint():
         result = chatbot_client(requestkey)
         resulttype = "order"
     
-    return {'result':f'{result}', 'resulttype':f'{resulttype}'}
+    return {'result':f'{result}', 'resulttype':f'{resulttype}', 'answer':f'{answer}'}

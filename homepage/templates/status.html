@@ -18,17 +18,17 @@
                         {% if quiz.id in solved_quiz_ids %}
                         <div class="container card-footer quizsuccess">
                                 <div class="row">
-                                    <span class="col-5 p-2 fw-bold text-white-50 fs-6">No. {{ quiz.id }}</span>
-                                    <span class="col-7 fw-bold text-light text-end p-2">
+                                    <span class="col-5 p-2 fs-6 fw-bold text-white-50">No. {{ quiz.id }}</span>
+                                    <span class="col-7 text-end p-2 text-light fw-bold">
                                         {{ quiz.answer }}
                                     </span>
                                 </div>
                             </div>
                         {% else %}
-                            <div class="container card-footer">
+                            <div class="container card-footer" id="unSolvedDiv{{ quiz.id }}">
                                 <div class="row">
-                                    <span class="col-5 p-2 fs-6">No. {{ quiz.id }}</span>        
-                                    <span class="col-7 text-black-50 text-end p-2">
+                                    <span class="col-5 p-2 fs-6" id="unSolvedSpanQuizId{{ quiz.id }}">No. {{ quiz.id }}</span>        
+                                    <span class="col-7 text-end p-2 text-black-50" id="unSolvedSpan{{ quiz.id }}">
                                         도전 가능
                                     </span>
                                 </div>
@@ -79,12 +79,14 @@
                                     if (xhr.status === 200) {
                                         var result = JSON.parse(xhr.responseText).result;
                                         var resulttype = JSON.parse(xhr.responseText).resulttype;
+                                        var answer = JSON.parse(xhr.responseText).answer;
                                         if (resulttype == 'quiz') {
                                             clearCheckBox()
                                             sendMessageQuiz(result, 'yourmsg');
                                             toScrollMoving(result);
                                         } else if (resulttype == 'answer') {
                                             sendMessage(result, 'yourmsg');
+                                            changeDivSpan(quiznumber, answer);
                                             quiznumber = 0
                                         } else {
                                             sendMessage(result, 'yourmsg');
@@ -95,7 +97,7 @@
                                     }
                                 };
                                 var data = { key: this.value, quiznumber: quiznumber };            // 전송할 데이터                                
-                                xhr.send(JSON.stringify(data));         // 데이터를 JSON 문자열로 변환하여 전송
+                                xhr.send(JSON.stringify(data));                             // 데이터를 JSON 문자열로 변환하여 전송
 
                                 this.value = '';
                             }
@@ -103,11 +105,11 @@
                                 sendMessage(this.value, 'mymsg');                                
 
                                 xhr.open('POST', 'api/endpoint', true);                    // 요청을 보낼 메서드 및 URL 설정
-                                xhr.setRequestHeader('Content-Type', 'application/json');   // Content-Type 헤더 설정 (JSON 전송 시에는 필요)                             
-                                xhr.onload = function() {                                   // 요청 완료 시의 콜백 함수 설정
+                                xhr.setRequestHeader('Content-Type', 'application/json');  // Content-Type 헤더 설정 (JSON 전송 시에는 필요)                             
+                                xhr.onload = function() {                                  // 요청 완료 시의 콜백 함수 설정
 
                                     if (xhr.status === 200) {
-                                        var result = JSON.parse(xhr.responseText).result;
+                                        var result = JSON.parse(xhr.responseText).result;  // 처음의 result 값은 문제 번호임
                                         var resulttype = JSON.parse(xhr.responseText).resulttype;
                                         if (resulttype == 'quiz') {
                                             clearCheckBox()
@@ -156,7 +158,8 @@
                             var newDiv = document.createElement('div');
                             newDiv.className = 'item ' + className;
                             const message = document.getElementById('quiz'+result).innerHTML;
-                            newDiv.innerHTML = '<div class="box"><p class="msg h6"><b class="fw-bold">Q. ' + message + '</b></p><span class="time">' + currentTime() + '</span></div>';
+                            newDiv.innerHTML = '<div class="box"><p class="msg h6"><b class="fw-bold">Q'+ result + '. '
+                                + message + '</b></p><span class="time">' + currentTime() + '</span></div>';
 
                             chatInner.appendChild(newDiv);
         
@@ -181,13 +184,23 @@
                             elementBox = document.querySelector('#quizbox'+result);
                             elementText = document.querySelector('#quiz'+result);
                             if (elementBox) {
-                                elementBox.scrollIntoView({ behavior: 'smooth', block: "center", inline: "center" });
+                                elementBox.scrollIntoView({ behavior: 'smooth', block: "center", inline: "center"})
                                 elementBox.setAttribute('class', 'col-10 card m-3 selected_quiz')
                                 elementText.setAttribute('style', 'word-break:keep-all; color:#916e07;')
                             }
                             elementBoxGlobal = elementBox
                             elementTextGlobal = elementText
                         }                        
+
+                        function changeDivSpan(quiznumber, answer){
+                            unSolvedSpan = document.getElementById('unSolvedSpan'+quiznumber)
+                            unSolvedSpan.innerHTML = answer
+                            unSolvedSpan.setAttribute('class', 'col-7 text-end p-2 text-light fw-bold')
+                            unSolvedDiv = document.getElementById('unSolvedDiv'+quiznumber)
+                            unSolvedDiv.setAttribute('class', 'container card-footer quizsuccess')
+                            unSolvedSpanQuizId = document.getElementById('unSolvedSpanQuizId'+quiznumber)
+                            unSolvedSpanQuizId.setAttribute('class', 'col-5 p-2 fs-6 fw-bold text-white-50')
+                        }
 
                         sendMessage('<b class="fw-bold">{{ g.user.username }}</b>님 환영합니다!','yourmsg')
 
