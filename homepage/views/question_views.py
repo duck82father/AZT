@@ -3,7 +3,7 @@ from werkzeug.utils import redirect
 
 from homepage import db
 from homepage.forms import QuestionForm, AnswerForm
-from homepage.models import Question, Answer, User
+from homepage.models import Question, Answer, Users
 from homepage.views.auth_views import login_required
 from datetime import datetime
 
@@ -16,14 +16,14 @@ def _list():
     question_list = Question.query.order_by(Question.create_date.desc())
     if kw:
         search = '%%{}%%'.format(kw)
-        sub_query = db.session.query(Answer.question_id, Answer.content, User.username)\
-            .join(User, Answer.user_id == User.id).subquery()
+        sub_query = db.session.query(Answer.question_id, Answer.content, Users.username)\
+            .join(Users, Answer.user_id == Users.id).subquery()
         question_list = question_list \
-            .join(User) \
+            .join(Users) \
             .outerjoin(sub_query, sub_query.c.question_id == Question.id) \
             .filter(Question.subject.ilike(search) |
                     Question.content.ilike(search) |
-                    User.username.ilike(search) |
+                    Users.username.ilike(search) |
                     sub_query.c.content.ilike(search) |
                     sub_query.c.username.ilike(search)
                     ) \

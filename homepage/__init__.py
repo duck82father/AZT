@@ -25,15 +25,16 @@ def create_app():
     if app.config['SQLALCHEMY_DATABASE_URI'].startswith("sqlite"):
         migrate.init_app(app, db, render_as_batch=True)
     else:
-        migrate.init_app(app, db)
+        migrate.init_app(app, db, render_as_batch=True)
     from . import models
 
     # 블루프린트
-    from .views import main_views, question_views, answer_views, auth_views
+    from .views import main_views, auth_views, status_views # question_views, answer_views
     app.register_blueprint(main_views.bp)
-    app.register_blueprint(question_views.bp)
-    app.register_blueprint(answer_views.bp)
+    # app.register_blueprint(question_views.bp)
+    # app.register_blueprint(answer_views.bp)
     app.register_blueprint(auth_views.bp)
+    app.register_blueprint(status_views.bp)
 
     # 필터
     from .filter import format_datetime

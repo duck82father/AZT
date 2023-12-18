@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"/>
+<div class="nav-background-behind"></div>
+<div class="container-fruid whole_wrap">
+    <div class="row">
+
+        <div class="col-7 quiz_wrap">
+            <div class="d-flex flex-wrap justify-content-center align-items-start m-3 p-3">
+                {% for quiz in quizs %}
+                    <div class="my-2">
+                        <div class="col-10 card m-3" style="width: 14rem; height: 11rem; border-radius: 0.6rem" id="quizbox{{ quiz.id }}">
+                                <div class="card-body text-quiz">
+                                    <h5 class="card-title fs-5 text fw-bold lh-base" style="word-break: keep-all" id="quiz{{ quiz.id }}">{{ quiz.quiz }}</h5>
+                                    <p class="card-text"></p>
+                                </div>
+                                {% if solved.user_id == g.user.id and solved.quiz_id == quiz.id %}
+                                    <div class="container card-footer quizsuccess">
+                                        <div class="row">
+                                            <span class="col-5 p-2 fw-bold text-white-50 fs-6">No. {{ quiz.id }}</span>
+                                            <span class="col-7 fw-bold text-light text-end p-2">
+                                                {{ quiz.answer }}
+                                {% else %}
+                                    <div class="container card-footer">
+                                        <div class="row">
+                                            <span class="col-5 p-2 fs-6">No. {{ quiz.id }}</span>        
+                                            <span class="col-7 text-black-50 text-end p-2">
+                                                도전 가능                                            
+                                {% endif %}
+                                            </span>
+                                        </div>
+                                </div>
+                        </div>
+                    </div>
+                {% endfor %}
+              </div>
+        </div>
+        
+        <div class="col-5">
+            
+            <div class="chat_wrap">
+                <div class="inner">
+                    <!-- 대화 아이템이 동적으로 추가될 공간 -->
+                </div>
+                
+                <input type="text" class="mymsg h5 p-4 chatbotinput" placeholder="내용 입력 후 엔터를 누르세요">
+
+                <div class="text-center">
+                    <br>
+                    <p>문제를 풀고 싶다면 <b class="fw-bold">'문제번호(1~120번)'</b>를, <b class="fw-bold">'안내'</b>를 입력하세요 👍</p>
+                </div>
+                <script>   
+                
+                    // 페이지 로드 후 실행되는 함수
+                    document.addEventListener("DOMContentLoaded", function() {
+                        var mymsgInput = document.querySelector('.mymsg');
+                        var yourmsgInput = document.querySelector('.yourmsg');
+                        var chatInner = document.querySelector('.chat_wrap .inner');
+                        var elementBoxGlobal = null
+                        var elementTextGlobal = null
+                        var quiznumber = 0
+
+                        // XMLHttpRequest 객체 생성
+                        var xhr = new XMLHttpRequest();                 
+
+                        mymsgInput.addEventListener('keypress', function(e) {
+
+                            if (e.keyCode === 13 && this.value.length && quiznumber > 0) {
+                                sendMessage(this.value, 'mymsg');                                
+                                
+                                xhr.open('POST', 'api/endpoint', true);                    // 요청을 보낼 메서드 및 URL 설정
+                                xhr.setRequestHeader('Content-Type', 'application/json');   // Content-Type 헤더 설정 (JSON 전송 시에는 필요)                             
+                                xhr.onload = function() {                                   // 요청 완료 시의 콜백 함수 설정
+                                                                       
+                                    if (xhr.status === 200) {
+                                        var result = JSON.parse(xhr.responseText).result;
+                                        var resulttype = JSON.parse(xhr.responseText).resulttype;
+                                        if (resulttype == 'quiz') {
+                                            clearCheckBox()
+                                            sendMessageQuiz(result, 'yourmsg');
+                                            toScrollMoving(result);
+                                        } else if (resulttype == 'answer') {
+                                            sendMessage(result, 'yourmsg');
+                                            quiznumber = 0
+                                        } else {
+                                            sendMessage(result, 'yourmsg');
+                                        };
+
+                                    } else {
+                                        console.error('Request failed. Status:', xhr.status);
+                                    }
+                                };
+                                var data = { key: this.value, quiznumber: quiznumber };            // 전송할 데이터                                
+                                xhr.send(JSON.stringify(data));         // 데이터를 JSON 문자열로 변환하여 전송
+
+                                this.value = '';
+                            }
+                            else if (e.keyCode === 13 && this.value.length) {
+                                sendMessage(this.value, 'mymsg');                                
+
+                                xhr.open('POST', 'api/endpoint', true);                    // 요청을 보낼 메서드 및 URL 설정
+                                xhr.setRequestHeader('Content-Type', 'application/json');   // Content-Type 헤더 설정 (JSON 전송 시에는 필요)                             
+                                xhr.onload = function() {                                   // 요청 완료 시의 콜백 함수 설정
+
+                                    if (xhr.status === 200) {
+                                        var result = JSON.parse(xhr.responseText).result;
+                                        var resulttype = JSON.parse(xhr.responseText).resulttype;
+                                        if (resulttype == 'quiz') {
+                                            clearCheckBox()
+                                            sendMessageQuiz(result, 'yourmsg');
+                                            toScrollMoving(result);
+                                        } else {
+                                            sendMessage(result, 'yourmsg');
+                                        };
+                                    } else {
+                                        console.error('Request failed. Status:', xhr.status);
+                                    }
+                                };
+                                var data = { key: this.value, quiznumber: quiznumber };            // 전송할 데이터                                
+                                xhr.send(JSON.stringify(data));         // 데이터를 JSON 문자열로 변환하여 전송
+
+                                this.value = '';
+                            }});
+                    
+
+                        var currentTime = function(){
+                            var date = new Date();
+                            var hh = date.getHours();
+                            var mm = date.getMinutes();
+                            var apm = hh > 12 ? "오후" : "오전";
+                            var ct = apm + " " + hh + ":" + mm + "";
+                            return ct;
+                        };
+        
+                        function sendMessage(message, className) {
+                            var newDiv = document.createElement('div');
+                            newDiv.className = 'item ' + className;
+                            newDiv.innerHTML = '<div class="box"><p class="msg h6">' + message + '</p><span class="time">' + currentTime() + '</span></div>';
+                        
+                            chatInner.appendChild(newDiv);
+        
+                            var lastItem = chatInner.lastChild;
+                            setTimeout(function(){
+                                lastItem.classList.add("on");
+                            }, 10);
+        
+                            var position = lastItem.offsetTop + chatInner.scrollTop;
+                            chatInner.scrollTop = position;
+                        }
+
+                        function sendMessageQuiz(result, className) {
+                            var newDiv = document.createElement('div');
+                            newDiv.className = 'item ' + className;
+                            const message = document.getElementById('quiz'+result).innerHTML;
+                            newDiv.innerHTML = '<div class="box"><p class="msg h6"><b class="fw-bold">Q. ' + message + '</b></p><span class="time">' + currentTime() + '</span></div>';
+
+                            chatInner.appendChild(newDiv);
+        
+                            var lastItem = chatInner.lastChild;
+                            setTimeout(function(){
+                                lastItem.classList.add("on");
+                            }, 10);
+        
+                            var position = lastItem.offsetTop + chatInner.scrollTop;
+                            chatInner.scrollTop = position;
+                        }
+
+                        function clearCheckBox() {
+                            if (elementBoxGlobal) {
+                                    elementBoxGlobal.setAttribute('class', 'col-10 card m-3')
+                                    elementTextGlobal.setAttribute('style', 'word-break:keep-all;')
+                                }
+                        }
+                        
+                        function toScrollMoving(result) {
+                            quiznumber = result
+                            elementBox = document.querySelector('#quizbox'+result);
+                            elementText = document.querySelector('#quiz'+result);
+                            if (elementBox) {
+                                elementBox.scrollIntoView({ behavior: 'smooth', block: "center", inline: "center" });
+                                elementBox.setAttribute('class', 'col-10 card m-3 selected_quiz')
+                                elementText.setAttribute('style', 'word-break:keep-all; color:#b18b19;')
+                            }
+                            elementBoxGlobal = elementBox
+                            elementTextGlobal = elementText
+                        }                        
+
+                        sendMessage('<b class="fw-bold">{{ g.user.username }}</b>님 환영합니다!','yourmsg')
+
+                        function information(){
+                            sendMessage('<b class="fw-bold">아재퀴즈 문제</b>를 선택하세요<br>[ 입력 : 1 ~ 120번 ]','yourmsg')
+                            sendMessage('<b class="fw-bold">Tip</b> : 배고플땐 음식을 주문해보세요🍜','yourmsg')
+                        }
+                        information()
+                    });
+
+
+                    // 화면 스크롤 시 navbar 사라짐 방지
+                    
+                    let yOffset = 0;
+                    
+                    const navGlobalFixed = () => {
+                    if (yOffset > 50) {
+                        document.body.classList.add("local-nav-sticky");
+                    } else {
+                        document.body.classList.remove("local-nav-sticky");
+                    }
+                    };
+
+
+                </script>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -5,19 +5,19 @@ import functools
 
 from homepage import db
 from homepage.forms import UserCreateForm, UserLoginForm
-from homepage.models import User
+from homepage.models import Users
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 @bp.route('/signup/', methods=('GET', 'POST'))
 def signup():
-    form = UserCreateForm()
+    form = UserCreateForm()    
     if request.method == 'POST' and form.validate_on_submit():
         # db와 form에 입력된 user정보를 비교하여 있으면 user정보를, 일치하지 않으면 None을 반환
-        user = User.query.filter_by(username=form.username.data).first()        
+        user = Users.query.filter_by(username=form.username.data).first()        
         if not user:
-            user = User(username=form.username.data,
+            user = Users(username=form.username.data,
                         password=generate_password_hash(form.password1.data),   # hash : 복호화가 불가능한 단방향 암호화
                         email=form.email.data)
             db.session.add(user)
@@ -31,9 +31,10 @@ def signup():
 @bp.route('/login/', methods=('GET', 'POST'))
 def login():
     form = UserLoginForm()
+    print(form)
     if request.method == 'POST' and form.validate_on_submit():
         error = None
-        user = User.query.filter_by(username=form.username.data).first()
+        user = Users.query.filter_by(username=form.username.data).first()
         if not user:
             error = "존재하지 않는 사용자입니다."
         elif not check_password_hash(user.password, form.password.data):
@@ -55,7 +56,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = User.query.get(user_id)
+        g.user = Users.query.get(user_id)
 
 @bp.route('/logout/')
 def logout():
@@ -70,3 +71,4 @@ def login_required(view):
             return redirect(url_for('auth.login', next=_next))
         return view(*args, **kwargs)
     return wrapped_view
+
