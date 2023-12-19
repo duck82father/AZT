@@ -22,6 +22,7 @@ body {
 
 .nav-font {
     font-family: 'EliceDigitalBaeum_Bold';
+    letter-spacing :0.1rem;
 }
 
 .introduce-font {
@@ -108,6 +109,10 @@ body {
     background-color: #d2ecfd;
 }
 
+.quizbox {
+    opacity: 1;
+}
+
 .quiz_wrap::-webkit-scrollbar{
    display:none;
  }
@@ -137,8 +142,8 @@ body {
 }
 
 .chat_wrap .inner {
-    background-color: #a5d7ff;
-    border: #8eceff 2px solid;
+    background-color: #abd9ff;
+    border: #96d2ff 2px solid;
     border-radius: 0.6rem;
     padding: 36px;
     overflow-y: scroll;

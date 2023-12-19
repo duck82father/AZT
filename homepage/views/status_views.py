@@ -57,9 +57,15 @@ def api_endpoint():
             resulttype = "order"
         else:
             if requestkey == target_quiz.answer:
-                result = '<b class="fw-bold">정답</b>입니다🥳'
-                resulttype = "answer"
-                answer = insertAnswerCheck (quiznumber)
+                if Solved.query.filter_by(user_id=g.user.id, quiz_id=quiznumber).first() != None:
+                    result = '이미 맞춘 문제입니다👍'
+                    resulttype = "alreadySolved"
+                    answer = azquiz.query.get(quiznumber).answer
+                    print(answer)
+                else:
+                    result = '<b class="fw-bold">정답</b>입니다🥳'
+                    resulttype = "answer"
+                    answer = insertAnswerCheck (quiznumber)
             else :
                 result = "다시 한 번 고민해보세요!"
                 resulttype = "order"

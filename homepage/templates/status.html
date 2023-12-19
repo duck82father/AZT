@@ -9,7 +9,7 @@
         <div class="col-7 quiz_wrap">
             <div class="d-flex flex-wrap justify-content-center align-items-start m-3 p-3">
                 {% for quiz in quizs %}
-                <div class="my-2">
+                <div class="my-2 quizbox" id="{{ loop.index }}">
                     <div class="col-10 card m-3" style="width: 14rem; height: 11rem; border-radius: 0.6rem"
                         id="quizbox{{ quiz.id }}">
                         <div class="card-body text-quiz">
@@ -51,7 +51,8 @@
                 <input type="text" class="mymsg h5 p-4 chatbotinput" placeholder="내용 입력 후 엔터를 누르세요">
                 <div class="text-center">
                     <br>
-                    <p>문제를 풀고 싶다면 <b class="fw-bold">'문제번호(1~120번)'</b>를, <b class="fw-bold">'안내'</b>를 입력하세요 👍</p>
+                    <p class="fs-6">문제를 풀고 싶다면 '문제번호(<b class="fw-bold">1 ~ 120번</b>)'를, 배고플땐 음식을 <b
+                            class="fw-bold">주문</b>해보세요 👍</p>
                 </div>
             </div>
         </div>
@@ -93,6 +94,9 @@
                             sendMessage(result, 'yourmsg');
                             changeDivSpan(quiznumber, answer);
                             quiznumber = 0
+                        } else if (resulttype == 'alreadySolved'){
+                            sendMessage(result, 'yourmsg');
+                            quiznumber = 0
                         } else {
                             sendMessage(result, 'yourmsg');
                         };
@@ -101,7 +105,8 @@
                         console.error('Request failed. Status:', xhr.status);
                     }
                 };
-                var data = { key: this.value, quiznumber: quiznumber };            // 전송할 데이터                                
+                var data = { key: this.value, quiznumber: quiznumber };
+                console.log(data);                                          // 전송할 데이터                                
                 xhr.send(JSON.stringify(data));                             // 데이터를 JSON 문자열로 변환하여 전송
 
                 this.value = '';
@@ -111,7 +116,7 @@
 
                 xhr.open('POST', 'api/endpoint', true);                    // 요청을 보낼 메서드 및 URL 설정
                 xhr.setRequestHeader('Content-Type', 'application/json');  // Content-Type 헤더 설정 (JSON 전송 시에는 필요)                             
-                xhr.onload = function () {                                  // 요청 완료 시의 콜백 함수 설정
+                xhr.onload = function () {                                 // 요청 완료 시의 콜백 함수 설정
 
                     if (xhr.status === 200) {
                         var result = JSON.parse(xhr.responseText).result;  // 처음의 result 값은 문제 번호임
@@ -133,7 +138,6 @@
                 this.value = '';
             }
         });
-
 
         var currentTime = function () {
             var date = new Date();
@@ -208,28 +212,22 @@
             unSolvedSpanQuizId.setAttribute('class', 'col-5 p-2 fs-6 fw-bold text-white-50')
         }
 
-        sendMessage('<b class="fw-bold">{{ g.user.username }}</b>님 환영합니다!', 'yourmsg')
+        var quizboxAll = document.querySelectorAll('.quizbox');
 
-        function information() {
-            sendMessage('<b class="fw-bold">아재퀴즈 문제</b>를 선택하세요<br>[ 입력 : 1 ~ 120번 ]', 'yourmsg')
-            sendMessage('<b class="fw-bold">Tip</b> : 배고플땐 음식을 <b class="fw-bold text-danger">"주문"</b>해보세요🍜', 'yourmsg')
-        }
-        information()
+        quizboxAll.forEach( function (quizbox) {
+            quizbox.addEventListener('click', function (e) {
+                clearCheckBox();
+                quiznumber = this.id;
+                sendMessageQuiz(this.id, 'yourmsg');
+                toScrollMoving(this.id);
+            });
+        });
+
+        sendMessage('<b class="fw-bold">{{ g.user.username }}</b>님 환영합니다!', 'yourmsg')        
+        sendMessage('<b class="fw-bold">아재퀴즈 문제</b>를 선택하세요<br>[ 입력 : 1 ~ 120번 ]', 'yourmsg')
+        sendMessage('<b class="fw-bold">Tip</b> : 배고플땐 음식을 <b class="fw-bold text-danger">"주문"</b>해보세요🍜', 'yourmsg')
+
     });
-
-
-    // 화면 스크롤 시 navbar 사라짐 방지
-
-    let yOffset = 0;
-
-    const navGlobalFixed = () => {
-        if (yOffset > 50) {
-            document.body.classList.add("local-nav-sticky");
-        } else {
-            document.body.classList.remove("local-nav-sticky");
-        }
-    };
-
 
 </script>
 
