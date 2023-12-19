@@ -42,7 +42,7 @@ def api_endpoint():
             result = chatbot_client(requestkey)
             resulttype = "order"
 
-    elif (result != [] and requestkey[-1:] == "번") or (result != [] and requestkey[-2:] == "문제"):
+    elif (result != [] and requestkey[-1:] == "번") or (result != [] and requestkey[-2:] == "문제") or (result != [] and requestkey[-1:] == "qjs"):
         result = int(result[0])
         if result > 120:
             result = "문제가 없습니다. [ 범위 1 ~ 120번 ]"

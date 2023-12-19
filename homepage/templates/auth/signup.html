@@ -1,31 +1,55 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div class="container">
-    <h5 class="my-3 border-bottom pb-2">계정생성</h5>
-    <form method="post">
-        {{ form.csrf_token }}
-        {% include "form_errors.html" %}
-        <div class="mb-3">
-            <label for="username">사용자 이름</label>
-            <input type="text" class="form-control" name="username" id="username"
-                   value="{{ form.username.data or '' }}">
+    <div class="py-4"></div>
+    <div class="py-5"></div>
+    <div class="py-4 text-center">
+        <h1 class="introduce-font lh-base">
+            찾아와주셔서 <b>감사</b>합니다
+        </h1>
+    </div>
+    <div class="col-4 mx-auto mt-2 signup-box">
+        <div class="text-center py-4">
+            <h4 class="mb-3 nav-font">계정생성</h4>
         </div>
-        <div class="mb-3">
-            <label for="password1">비밀번호</label>
-            <input type="password" class="form-control" name="password1" id="password1"
-                   value="{{ form.password1.data or '' }}">
-        </div>
-        <div class="mb-3">
-            <label for="password2">비밀번호 확인</label>
-            <input type="password" class="form-control" name="password2" id="password2"
-                   value="{{ form.password2.data or '' }}">
-        </div>
-        <div class="mb-3">
-            <label for="email">이메일</label>
-            <input type="text" class="form-control" name="email" id="email"
-                   value="{{ form.email.data or '' }}">
-        </div>
-        <button type="submit" class="btn btn-primary">생성하기</button>
-    </form>
+        <form method="post">
+            {{ form.csrf_token }}
+            {% include "form_errors.html" %}
+            <div class="mb-3">
+                <label for="username" class="mb-2 fw-bold">사용자 이름</label>
+                <input type="text" class="form-control mb-4" name="username" id="username"
+                    value="{{ form.username.data or '' }}">
+            </div>
+            <div class="mb-3">
+                <label for="password1" class="mb-2 fw-bold">비밀번호</label>
+                <input type="password" class="form-control mb-4" name="password1" id="password1"
+                    value="{{ form.password1.data or '' }}">
+            </div>
+            <div class="mb-3">
+                <label for="password2" class="mb-2 fw-bold">비밀번호 확인</label>
+                <input type="password" class="form-control mb-4" name="password2" id="password2"
+                    value="{{ form.password2.data or '' }}">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="mb-2 fw-bold">이메일</label>
+                <input type="text" class="form-control mb-4" name="email" id="email"
+                    value="{{ form.email.data or '' }}">
+            </div>
+            <div class="text-center py-4">
+                <button type="submit" class="btn btn-secondary">생성하기</button>
+            </div>
+            
+        </form>
+    </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var changeNavBackground = document.getElementById("navbar");
+        changeNavBackground.setAttribute('class','navbar navbar-expand-lg navbar-light nav-gradient-background-gray');
+    });
+</script>
+
+
 {% endblock %}

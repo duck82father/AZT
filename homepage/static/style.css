@@ -6,11 +6,67 @@ body {
     overflow: hidden;
 }
 
+@font-face {
+    font-family: 'EliceDigitalBaeum_Bold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_220508@1.0/EliceDigitalBaeum_Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Jeongnimsaji-R';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/Jeongnimsaji-R.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+.nav-font {
+    font-family: 'EliceDigitalBaeum_Bold';
+}
+
+.introduce-font {
+    font-family: 'Jeongnimsaji-R';
+}
+
+.login-box {
+    padding: 1rem 3.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 1rem;
+    color:#091181;
+    background-color:#f7fbff;
+    border-color:#e1e9ee;
+    width:30rem;
+    box-shadow : 3px 3px 5px 4px rgb(77, 71, 71, 0.05);
+}
+
+.signup-box {
+    padding: 1rem 3.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 1rem;
+    color:#565763;
+    background-color:#fcfcfc;
+    border-color:#e0e0e0;
+    width:30rem;
+    box-shadow : 3px 3px 5px 4px rgb(77, 71, 71, 0.05);
+}
+
+.font-color-navi {
+    color:#131dac;
+}
+
 .text-quiz {
     color:#131dac;
 }
 
-.jumbotron {
+.nav-gradient-background-gray {
+    background: linear-gradient(-30deg, #545c63, #525270, #434d5c, #6e7794);
+    background-size: 400% 400%;
+    animation: gradient 9s ease infinite;
+}
+
+.nav-gradient-background {
     background: linear-gradient(-30deg, #2465c0, #1f83da, #2752dd, #1289cf);
     background-size: 400% 400%;
     animation: gradient 9s ease infinite;
