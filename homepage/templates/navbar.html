@@ -3,7 +3,7 @@
     position: absolute; width: 100%; z-index: 9999;" id="navbar">
     <div class="container-fluid">
 
-        <a class="navbar-brand text-light fw-bold p-3 fs-3 nav-font font-size-small-up"
+        <a class="navbar-brand text-light fw-bold p-3 fs-3 nav-font nav-line-height"
             href="{{ url_for('main.index') }}">아재개그&nbsp;120</a>
 
         <!-- 화면너비가 작으면 navbar-collapse은 숨겨지고, navbar-toggle은 표시됨 -->
@@ -15,7 +15,7 @@
         {% if g.user %}
         <div class="scores">
             <div class="scores-text">
-                <h2>SCORES&nbsp;&nbsp;&nbsp;<b id="solvedCountNumber">{{ solved_quiz_ids|length }}</b>&nbsp;/&nbsp;120</h2>
+                <h2>SCORES&nbsp;&nbsp;&nbsp;<b id="solvedCountNumber" class="scores-number">{{ solved_quiz_ids|length }}</b>&nbsp;/&nbsp;120</h2>
             </div>
             <div class="scores-circles">
                 <ul class="circles">

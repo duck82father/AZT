@@ -26,6 +26,7 @@ class Users(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    comment = db.Column(db.String(20), nullable=True)
 
 class Solved(db.Model):
     __tablename__ = 'solved'

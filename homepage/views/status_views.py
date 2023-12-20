@@ -2,8 +2,7 @@ from flask import Blueprint, render_template, request, url_for, g, flash
 from werkzeug.utils import redirect
 
 from homepage import db
-from homepage.forms import ChatForm
-from homepage.models import Users, azquiz, Solved
+from homepage.models import azquiz, Solved
 from homepage.views.auth_views import login_required
 from homepage.client import chatbot_client
 
@@ -26,7 +25,7 @@ def countSolved ():
         solved_count = 0
         return
 
-@bp.route('/show/', methods=('GET', 'POST'))
+@bp.route('/show', methods=('GET', 'POST'))
 @login_required
 def show():
     solved = Solved.query.filter_by(user_id=g.user.id).all()
@@ -39,12 +38,14 @@ def show():
 @bp.route('/show/api/endpoint', methods=['POST'])
 def api_endpoint():
     data = request.json  # JSON 형식의 데이터를 받기 위해 request.json 사용
-
+    
     requestkey, quiznumber = data['key'], data['quiznumber']    
     result = re.findall(r'\d+', requestkey)
     order_result = re.findall(r'주문', requestkey)
     answer = None
     solved_count = 0
+
+    print("status : requestkey = {}, quiznumber = {}".format(requestkey, quiznumber))
 
     if order_result == ['주문']:
         if order_result[0] == '주문':
