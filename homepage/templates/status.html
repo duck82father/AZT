@@ -5,32 +5,36 @@
 <div class="nav-background-behind"></div>
 <div class="container-fruid whole_wrap">
     <div class="row">
-
-        <div class="col-7 quiz_wrap">
+        <div class="col-sm-7 quiz_wrap">
             <div class="d-flex flex-wrap justify-content-center align-items-start m-3 p-3">
                 {% for quiz in quizs %}
-                <div class="my-2 quizbox" id="{{ loop.index }}">
-                    <div class="col-10 card m-3" style="width: 14rem; height: 11rem; border-radius: 0.6rem"
-                        id="quizbox{{ quiz.id }}">
-                        <div class="card-body text-quiz">
-                            <h5 class="card-title fs-5 text fw-bold lh-base" style="word-break: keep-all"
-                                id="quiz{{ quiz.id }}">{{ quiz.quiz }}</h5>
+                <div class="my-1 quizBoxSelect" id="{{ loop.index }}">
+                    <div class="col-10 card m-3" style="width: 14rem; height: 11rem; border-radius: 0.6rem;"
+                        id="quizbox{{ loop.index }}">
+                        {% if quiz.id in solved_quiz_ids %}
+                        <div class="card-body text-quiz quizsuccess-top">
+                            <h5 class="card-title fs-5 text fw-bold lh-base quizsuccess-text"
+                                style="word-break:keep-all" id="quiz{{ quiz.id }}">{{ quiz.quiz }}</h5>
                             <p class="card-text"></p>
                         </div>
-                        {% if quiz.id in solved_quiz_ids %}
                         <div class="container card-footer quizsuccess">
                             <div class="row">
-                                <span class="col-5 p-2 fs-6 fw-bold text-white-50">No. {{ quiz.id }}</span>
+                                <span class="col-5 p-2 fs-6 fw-bold quizsuccess-number">No. {{ quiz.id }}</span>
                                 <span class="col-7 text-end p-2 text-light fw-bold">
                                     {{ quiz.answer }}
                                 </span>
                             </div>
                         </div>
                         {% else %}
+                        <div class="card-body text-quiz" id="quizCardBody{{ quiz.id }}">
+                            <h5 class="card-title fs-5 text fw-bold lh-base" style="word-break: keep-all"
+                                id="quiz{{ quiz.id }}">{{ quiz.quiz }}</h5>
+                            <p class="card-text"></p>
+                        </div>
                         <div class="container card-footer" id="unSolvedDiv{{ quiz.id }}">
                             <div class="row">
-                                <span class="col-5 p-2 fs-6" id="unSolvedSpanQuizId{{ quiz.id }}">No. {{ quiz.id
-                                    }}</span>
+                                <span class="col-5 p-2 fs-6" id="unSolvedSpanQuizId{{ quiz.id }}">No. {{
+                                    quiz.id}}</span>
                                 <span class="col-7 text-end p-2 text-black-50" id="unSolvedSpan{{ quiz.id }}">
                                     도전 가능
                                 </span>
@@ -43,15 +47,14 @@
             </div>
         </div>
 
-        <div class="col-5">
+        <div class="col-lg-5">
             <div class="chat_wrap">
                 <div class="inner">
                     <!-- 대화 아이템이 동적으로 추가될 공간 -->
                 </div>
                 <input type="text" class="mymsg h5 p-4 chatbotinput" placeholder="내용 입력 후 엔터를 누르세요">
                 <div class="text-center">
-                    <br>
-                    <p class="fs-6">문제를 풀고 싶다면 '문제번호(<b class="fw-bold">1 ~ 120번</b>)'를, 배고플땐 음식을 <b
+                    <p class="fs-6 footer-text">문제를 풀고 싶다면 '문제번호(<b class="fw-bold">1 ~ 120번</b>)'를, 배고플땐 음식을 <b
                             class="fw-bold">주문</b>해보세요 👍</p>
                 </div>
             </div>
@@ -86,15 +89,24 @@
                         var result = JSON.parse(xhr.responseText).result;
                         var resulttype = JSON.parse(xhr.responseText).resulttype;
                         var answer = JSON.parse(xhr.responseText).answer;
+                        var solvedCount = JSON.parse(xhr.responseText).solvedCount;
                         if (resulttype == 'quiz') {
                             clearCheckBox()
                             sendMessageQuiz(result, 'yourmsg');
                             toScrollMoving(result);
                         } else if (resulttype == 'answer') {
+                            clearCheckBox()
                             sendMessage(result, 'yourmsg');
                             changeDivSpan(quiznumber, answer);
+                            addSolvedCountNumber();
+                            if (solvedCount == 120) {
+                                alert('🌈 축하합니다! 모든 문제를 문제 맞추셨습니다! 🌈');
+                            } else if (solvedCount % 10 == 0) {
+                                alert('👏 축하합니다! 총 ' + solvedCount + '문제 맞추셨습니다! 👏');
+                            } else {
+                            };
                             quiznumber = 0
-                        } else if (resulttype == 'alreadySolved'){
+                        } else if (resulttype == 'alreadySolved') {
                             sendMessage(result, 'yourmsg');
                             quiznumber = 0
                         } else {
@@ -121,6 +133,8 @@
                     if (xhr.status === 200) {
                         var result = JSON.parse(xhr.responseText).result;  // 처음의 result 값은 문제 번호임
                         var resulttype = JSON.parse(xhr.responseText).resulttype;
+                        var answer = JSON.parse(xhr.responseText).answer;
+                        var solvedCount = JSON.parse(xhr.responseText).solvedCount;
                         if (resulttype == 'quiz') {
                             clearCheckBox()
                             sendMessageQuiz(result, 'yourmsg');
@@ -190,9 +204,9 @@
         }
 
         function toScrollMoving(result) {
-            quiznumber = result
-            elementBox = document.querySelector('#quizbox' + result);
-            elementText = document.querySelector('#quiz' + result);
+            quiznumber = result;
+            elementBox = document.getElementById('quizbox' + result);
+            elementText = document.getElementById('quiz' + result);
             if (elementBox) {
                 elementBox.scrollIntoView({ behavior: 'smooth', block: "center", inline: "center" })
                 elementBox.setAttribute('class', 'col-10 card m-3 selected_quiz')
@@ -204,18 +218,29 @@
 
         function changeDivSpan(quiznumber, answer) {
             unSolvedSpan = document.getElementById('unSolvedSpan' + quiznumber)
+            unSolvedDiv = document.getElementById('unSolvedDiv' + quiznumber)
+            unSolvedSpanQuizId = document.getElementById('unSolvedSpanQuizId' + quiznumber)
+            quizCardBody = document.getElementById('quizCardBody' + quiznumber)
+            quiz = document.getElementById('quiz' + quiznumber)
+            score = document.getElementById('score' + quiznumber)
             unSolvedSpan.innerHTML = answer
             unSolvedSpan.setAttribute('class', 'col-7 text-end p-2 text-light fw-bold')
-            unSolvedDiv = document.getElementById('unSolvedDiv' + quiznumber)
             unSolvedDiv.setAttribute('class', 'container card-footer quizsuccess')
-            unSolvedSpanQuizId = document.getElementById('unSolvedSpanQuizId' + quiznumber)
-            unSolvedSpanQuizId.setAttribute('class', 'col-5 p-2 fs-6 fw-bold text-white-50')
+            unSolvedSpanQuizId.setAttribute('class', 'col-5 p-2 fs-6 fw-bold quizsuccess-number')
+            quizCardBody.setAttribute('class', 'card-body text-quiz quizsuccess-top')
+            quiz.setAttribute('class', 'card-title fs-5 text fw-bold lh-base quizsuccess-text')
+            score.setAttribute('class', 'circle-solved')
         }
 
-        var quizboxAll = document.querySelectorAll('.quizbox');
+        function addSolvedCountNumber(){
+            solvedCountNumber = document.getElementById('solvedCountNumber').innerHTML;
+            document.getElementById('solvedCountNumber').innerHTML = Number(solvedCountNumber) + 1;
+        }
 
-        quizboxAll.forEach( function (quizbox) {
-            quizbox.addEventListener('click', function (e) {
+        var quizboxAll = document.querySelectorAll('.quizBoxSelect');
+
+        quizboxAll.forEach(function (quizbox) {
+            quizbox.addEventListener('click', function () {
                 clearCheckBox();
                 quiznumber = this.id;
                 sendMessageQuiz(this.id, 'yourmsg');
@@ -223,9 +248,22 @@
             });
         });
 
-        sendMessage('<b class="fw-bold">{{ g.user.username }}</b>님 환영합니다!', 'yourmsg')        
+
+        function goToFirstUnSolvedDiv() {
+            // id가 'unSolvedDiv*'인 모든 div 요소를 찾습니다.
+            const unSolvedDivs = document.querySelectorAll("div[id^='unSolvedDiv']");
+
+            // 가장 작은 id를 가진 div 요소를 반환합니다.
+            const firstUnSolvedDiv = unSolvedDivs[0];
+
+            // 가장 작은 id를 가진 div 요소를 스크롤합니다.
+            firstUnSolvedDiv.scrollIntoView({ behavior: 'smooth', block: "center", inline: "center" })
+        }
+
+        sendMessage('<b class="fw-bold">{{ g.user.username }}</b>님 환영합니다!', 'yourmsg')
         sendMessage('<b class="fw-bold">아재퀴즈 문제</b>를 선택하세요<br>[ 입력 : 1 ~ 120번 ]', 'yourmsg')
         sendMessage('<b class="fw-bold">Tip</b> : 배고플땐 음식을 <b class="fw-bold text-danger">"주문"</b>해보세요🍜', 'yourmsg')
+        goToFirstUnSolvedDiv()
 
     });
 

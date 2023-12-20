@@ -11,12 +11,20 @@ import re
 
 bp = Blueprint('status', __name__, url_prefix='/status')
 
-def insertAnswerCheck (quiznumber):
-    solved_record = Solved(user_id=g.user.id, quiz_id=quiznumber)
+def insertAnswerCheckToDB (quiznumber):
+    solved_record = Solved(user_id=g.user.id, quiz_id=quiznumber)    
+    answer = azquiz.query.get(quiznumber).answer
     db.session.add(solved_record)
     db.session.commit()
-    answer = azquiz.query.get(quiznumber).answer
     return answer
+
+def countSolved ():
+    solved_count = Solved.query.filter_by(user_id=g.user.id).count()
+    if solved_count % 10 == 0:
+        return solved_count
+    else:
+        solved_count = 0
+        return
 
 @bp.route('/show/', methods=('GET', 'POST'))
 @login_required
@@ -36,6 +44,7 @@ def api_endpoint():
     result = re.findall(r'\d+', requestkey)
     order_result = re.findall(r'주문', requestkey)
     answer = None
+    solved_count = 0
 
     if order_result == ['주문']:
         if order_result[0] == '주문':
@@ -61,11 +70,11 @@ def api_endpoint():
                     result = '이미 맞춘 문제입니다👍'
                     resulttype = "alreadySolved"
                     answer = azquiz.query.get(quiznumber).answer
-                    print(answer)
                 else:
                     result = '<b class="fw-bold">정답</b>입니다🥳'
                     resulttype = "answer"
-                    answer = insertAnswerCheck (quiznumber)
+                    answer = insertAnswerCheckToDB (quiznumber)
+                    solved_count = countSolved ()
             else :
                 result = "다시 한 번 고민해보세요!"
                 resulttype = "order"
@@ -74,4 +83,5 @@ def api_endpoint():
         result = chatbot_client(requestkey)
         resulttype = "order"
     
-    return {'result':f'{result}', 'resulttype':f'{resulttype}', 'answer':f'{answer}'}
+    return {'result':f'{result}', 'resulttype':f'{resulttype}',
+            'answer':f'{answer}', 'solvedCount':f'{solved_count}'}
