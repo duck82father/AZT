@@ -25,7 +25,7 @@ def countSolved ():
         solved_count = 0
         return
 
-@bp.route('/show', methods=('GET', 'POST'))
+@bp.route('/show/', methods=('GET', 'POST'))
 @login_required
 def show():
     solved = Solved.query.filter_by(user_id=g.user.id).all()

@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap justify-content-center align-items-start mx-3 my-4 p-3">
                 {% for quiz in quizs %}
                 <div class="my-1 quizBoxSelect" id="{{ loop.index }}">
-                    <div class="col-10 card m-3" style="width: 14rem; height: 11rem; border-radius: 0.6rem;"
+                    <div class="col-10 card m-3" style="width: 13.5rem; height: 11rem; border-radius: 0.6rem;"
                         id="quizbox{{ loop.index }}">
                         {% if quiz.id in solved_quiz_ids %}
                         <div class="card-body text-quiz quizsuccess-top">
@@ -57,9 +57,22 @@
                     <p class="footer-text">문제를&nbsp;풀고&nbsp;싶다면
                         <b class="fw-bold text-quiz">번호 [1 ~ 120번]</b>를&nbsp;&nbsp;/&nbsp;&nbsp;어려울 땐
                         <b class="fw-bold text-quiz">힌트</b> 요청을&nbsp;&nbsp;/&nbsp;&nbsp;배고플땐&nbsp;음식을
-                        <b class="fw-bold text-quiz">주문</b>해보세요&nbsp;👍</p>
+                        <b class="fw-bold text-quiz">주문</b>해보세요&nbsp;👍
+                    </p>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed top-50 start-50 translate-middle-x">
+    <div id="liveToast" class="toast align-items-center text-bg-warning border-0 toast-size-up" role="alert"
+        aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="toastText">
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
         </div>
     </div>
 </div>
@@ -102,9 +115,16 @@
                             changeDivSpan(quiznumber, answer);
                             addSolvedCountNumber();
                             if (solvedCount == 120) {
-                                alert('🌈 축하합니다! 모든 문제를 문제 맞추셨습니다! 🌈');
+                                const toastLiveExample = document.getElementById('liveToast')
+                                document.getElementById('toastText').innerHTML = '🌈 축하합니다! 모든 문제를 문제 맞추셨습니다! 🌈';
+                                const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+                                toastBootstrap.show()
                             } else if (solvedCount % 10 == 0) {
-                                alert('👏 축하합니다! 총 ' + solvedCount + '문제 맞추셨습니다! 👏');
+                                // alert('👏 축하합니다! 총 ' + solvedCount + '문제 맞추셨습니다! 👏');
+                                const toastLiveExample = document.getElementById('liveToast')
+                                document.getElementById('toastText').innerHTML = '💐 축하합니다! 총 ' + solvedCount + '문제 맞추셨습니다! 💐';
+                                const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+                                toastBootstrap.show()
                             } else {
                             };
                             quiznumber = 0
@@ -234,7 +254,7 @@
             score.setAttribute('class', 'circle-solved')
         }
 
-        function addSolvedCountNumber(){
+        function addSolvedCountNumber() {
             solvedCountNumber = document.getElementById('solvedCountNumber').innerHTML;
             document.getElementById('solvedCountNumber').innerHTML = Number(solvedCountNumber) + 1;
         }

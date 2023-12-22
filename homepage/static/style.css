@@ -13,7 +13,8 @@
 }
 
 
-html, body {
+html,
+body {
     scroll-behavior: smooth;
     /* 스크롤 부드럽게 이동하는 CSS 속성 */
 }
@@ -21,26 +22,155 @@ html, body {
 body {
     overflow: hidden;
 }
+/* 
+#comment .input::placeholder{
+    color: #a9afbb, i !important;;
+} */
+
+.nav-rank {
+    border-right: 0.5px solid #7291ec;
+    padding-right: 15px;
+
+    @media screen and (max-width: 1000px) {
+        display: none;
+    }
+}
+
+
+.rank-text {
+    padding: 20px;
+    font-family: 'EliceDigitalBaeum_Bold';
+    color: #203bd4;
+    font-size: 2.5em;
+    margin-right: 20px;
+}
+
+.rank-text-user {
+    padding-top: 20px;
+    padding-bottom: 4px;
+    font-family: 'EliceDigitalBaeum_Bold';
+    color: #ffffff;
+    font-size: 2.5em;
+}
+
+.rank-number-user {
+    color:#f3f169;
+    padding-left:20px;
+    padding-right:10px;
+    font-size: 2em;
+}
+
+.rank-scores-number{
+    color: #3551f1;
+}
+
+.rank-scores-text {
+    margin-top:25px;
+    border-top: 1px solid #acbeda;
+    padding-top:25px;
+    font-family: 'EliceDigitalBaeum_Bold';
+    color: #8f9eb3;
+    font-size: 1.2em;
+}
+
+.rank-scores-box {
+    padding: 2rem 2rem;
+    margin-top: 2rem;
+    /* margin-left:0.6rem;
+    margin-right:0.6rem; */
+    border: 1px solid transparent;
+    border-radius: 0.6rem;
+    color: #091181;
+    background-color: #e1f0ff;
+    border-color: #e1e9ee;
+    box-shadow: 3px 3px 5px 4px rgb(77, 71, 71, 0.05);
+}
+
+.rank-group {
+    height: 4.5rem;
+    box-shadow: 3px 3px 5px 4px rgb(77, 71, 71, 0.075);
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.rank-circle {
+    background-color: #acbeda;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 5px;
+}
+
+.rank-circle-solved {
+    transition: background-color 0.3s ease-in-out;
+    background-color: #fffb08;
+    outline: 1px solid #ebd405;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 5px;
+}
+
+.rank-input-box {
+    padding: 1.5rem 1.5rem;
+    margin-top: 1.5rem;
+    /* margin-left:0.6rem;
+    margin-right:0.6rem; */
+    border-radius: 0.6rem;
+    color: #091181;
+    background-color: #b2daff;
+    border-color: #e1e9ee;
+    box-shadow: 3px 3px 5px 4px rgb(77, 71, 71, 0.05);
+}
+
+
+.rank-1st-number:disabled {
+    background-color: #203bd4;
+}
+
+.rank-1st-content:disabled {
+    background-color: #3c58f7;
+    border: 1px solid blue;
+}
+
+.rank-nth-number:disabled {
+    color: #605f69;
+    background-color: #ecf1fd;
+    border: 1px solid #aaa;
+}
+
+.rank-nth-content:disabled {
+    color: #605f69;
+    background-color: #fff;
+    border: 1px solid #aaa;
+}
+
+.btn-group button:disabled {
+    opacity: 100%;
+}
 
 .scores {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+    @media screen and (max-width: 1000px) {
+        display: none;
+    }
 }
 
 .scores-number {
     color: #f3f169;
 }
 
-
 .scores-text {
     padding: 20px;
-    font-family:'EliceDigitalBaeum_Bold';
-    color:#c0ccec;
+    font-family: 'EliceDigitalBaeum_Bold';
+    color: #c0ccec;
     font-size: 1.2em;
     border-right: 0.5px solid #7291ec;
-    margin-right:20px;
+    margin-right: 20px;
 }
 
 .scores-circles {
@@ -48,7 +178,7 @@ body {
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    padding-right:10px;
+    padding-right: 10px;
 }
 
 .circles {
@@ -60,21 +190,22 @@ body {
 
 .circle {
     background-color: #7291ec;
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    margin:3px;
+    margin: 3px;
 }
 
 .circle-solved {
     transition: background-color 0.3s ease-in-out;
     background-color: #f3f169;
-    outline : 2px solid #1521c2;
-    width: 12px;
-    height: 12px;
+    outline: 2px solid #1521c2;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    margin:3px;
+    margin: 3px;
 }
+
 
 .nav-font {
     font-family: 'EliceDigitalBaeum_Bold';
@@ -110,7 +241,7 @@ body {
 }
 
 .nav-line-height {
-    line-height:1.5;
+    line-height: 1.5;
 }
 
 .text-quiz {
@@ -144,9 +275,9 @@ body {
 }
 
 .nav-background-behind {
-    position:fixed;
+    position: fixed;
     width: 100%;
-    height:85px;
+    height: 85px;
 }
 
 .card {
@@ -414,5 +545,5 @@ input:focus {
 }
 
 .text-nav {
-    color:#c4cef0!important;
+    color: #c4cef0 !important;
 }

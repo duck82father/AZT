@@ -77,7 +77,7 @@ def delete(question_id):
     db.session.commit()
     return redirect(url_for('question._list'))
 
-@bp.route('/vote/<int:question_id>/')
+@bp.route('/vote/<int:question_id>')
 @login_required
 def vote(question_id):
     _question = Question.query.get_or_404(question_id)
